@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مكتبتي الرقمية</title>
+<style>*{margin:0;box-sizing:border-box;font-family:system-ui,"Segoe UI",Tahoma,sans-serif}
+body{background:#fff;color:#1a1a1a}
+.top{max-width:1000px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e5e5e5;font-weight:600}
+.top button{padding:7px 14px;border-radius:8px;border:1px solid #1a1a1a;background:#1a1a1a;color:#fff;cursor:pointer;font-weight:400}
+.wrap{max-width:1000px;margin:0 auto;padding:24px 20px}
+.hero h1{font-size:26px}.hero p{color:#555;margin-top:6px}
+.filters{display:flex;gap:8px;margin-top:14px}
+.chip{padding:6px 14px;border-radius:6px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:13px}
+.chip.on{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-top:16px}
+.card{border:1px solid #e5e5e5;border-radius:12px;overflow:hidden}
+.cover{height:120px;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:600}
+.body{padding:12px}.body h4{font-size:15px}.body p{font-size:12px;color:#777;margin-top:3px}
+.meta{display:flex;justify-content:space-between;margin-top:8px;font-size:13px}
+.lang{padding:2px 8px;border-radius:6px;font-size:11px}.price{font-weight:600}
+.buy{width:100%;margin-top:10px;padding:8px;border-radius:8px;border:none;background:#1a1a1a;color:#fff;cursor:pointer}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.stat{border:1px solid #e5e5e5;border-radius:12px;padding:14px}
+.stat b{font-size:26px}.stat span{display:block;font-size:12px;color:#777;margin-top:2px}
+.brow{display:grid;grid-template-columns:150px 1fr 70px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #eee;font-size:13px}
+.track{height:10px;border-radius:6px;background:#f0f0f0;overflow:hidden}
+.fill{height:100%;border-radius:6px}
+.login{max-width:340px;margin:60px auto;border:1px solid #e5e5e5;border-radius:12px;padding:24px}
+.login input{width:100%;padding:9px 12px;border-radius:8px;border:1px solid #ddd;margin-top:6px;box-sizing:border-box;font-size:14px}
+.login button{width:100%;margin-top:14px;padding:9px;border-radius:8px;border:none;background:#1a1a1a;color:#fff;cursor:pointer;font-size:14px}
+label{font-size:12px;color:#777;display:block;margin-top:10px}</style>
+<base target="_blank">
+</head>
+<body>
+<div class="top"><span id="ttl">مكتبتي الرقمية</span><button onclick="mode()">دخول المطوّر</button></div>
+<div class="wrap" id="shop"></div>
+<div class="wrap" id="dash" style="display:none"></div>
+<div class="login" id="login" style="display:none">
+<h2 style="font-size:18px">دخول المطوّر</h2>
+<label>اسم المستخدم</label><input id="lu">
+<label>كلمة المرور</label><input id="lp" type="password">
+<button onclick="go()">دخول</button>
+<p style="font-size:11px;color:#999;margin-top:8px">الافتراضي: admin / 1234</p>
+</div>
+<script>
+var BOOKS=[{"t": "مدخل إلى البرمجة", "a": "فريق المكتبة", "p": 4.99, "l": "ar", "c": "1", "d": "أساسيات البرمجة بلغة بسيطة.", "s": 34}, {"t": "Apprendre le français", "a": "Équipe Biblio", "p": 6.99, "l": "fr", "c": "2", "d": "Méthode progressive pour débutants.", "s": 21}, {"t": "English Mastery", "a": "Biblio Team", "p": 7.99, "l": "en", "c": "3", "d": "Speak and write fluent English.", "s": 12}],V="shop",FL="all",USER="admin",PASS="1234",
+LN={ar:"العربية",fr:"FR",en:"EN"},LC={ar:"#2563eb",fr:"#dc2626",en:"#16a34a"},
+CV={1:"#dbeafe",2:"#fee2e2",3:"#dcfce7",4:"#ede9fe",5:"#f3f4f6"};
+function save(){try{localStorage.setItem("bk2_live",JSON.stringify(BOOKS))}catch(e){}}
+var Lv;try{Lv=JSON.parse(localStorage.getItem("bk2_live"));if(Lv&&Lv.length)BOOKS=Lv}catch(e){}
+function shop(){
+ var L=BOOKS.filter(function(b){return FL==="all"||b.l===FL});
+ document.getElementById("shop").innerHTML=
+  '<div class="hero"><h1>كتب إلكترونية بالعربية والفرنسية والإنجليزية</h1><p>حمّل كتبك فورًا بعد الدفع — وصول لمدى الحياة على أي جهاز.</p></div>'+
+  '<div class="filters">'+["all","ar","fr","en"].map(function(l){
+    return '<button class="chip'+(FL===l?" on":"")+'" onclick="fl(\''+l+'\')">'+(l==="all"?"الكل":LN[l])+'</button>'}).join("")+'</div>'+
+  '<div class="grid">'+L.map(function(b){
+    return '<div class="card"><div class="cover" style="background:'+CV[b.c]+'">'+b.t.charAt(0)+'</div>'+
+    '<div class="body"><h4>'+b.t+'</h4><p>'+b.a+'</p><p>'+b.d+'</p>'+
+    '<div class="meta"><span class="lang" style="background:'+LC[b.l]+'22;color:'+LC[b.l]+'">'+LN[b.l]+'</span>'+
+    '<span class="price">$'+Number(b.p).toFixed(2)+'</span></div>'+
+    '<button class="buy" onclick="buy('+JSON.stringify(b.t).replace(/"/g,"&quot;")+')">اشترِ الآن</button></div></div>'}).join("")+'</div>';
+}
+function fl(l){FL=l;shop()}
+function buy(t){BOOKS.forEach(function(b){if(b.t===t)b.s=(b.s||0)+1});save();alert("شكرًا لشرائك! (تجريبي)")}
+function dash(){
+ var n=BOOKS.length,sl=BOOKS.reduce(function(x,b){return x+(b.s||0)},0),
+ rv=BOOKS.reduce(function(x,b){return x+(b.s||0)*(b.p||0)},0),tp=null;
+ BOOKS.forEach(function(b){if(!tp||(b.s||0)>(tp.s||0))tp=b});
+ var mx=1;BOOKS.forEach(function(b){mx=Math.max(mx,b.s||0)});
+ document.getElementById("dash").innerHTML=
+  '<h2 style="font-size:20px">لوحة المطوّر</h2>'+
+  '<div class="stats"><div class="stat"><b>'+n+'</b><span>عدد الكتب</span></div>'+
+  '<div class="stat"><b>'+sl+'</b><span>إجمالي المبيعات</span></div>'+
+  '<div class="stat"><b>$'+rv.toFixed(2)+'</b><span>إجمالي الإيرادات</span></div>'+
+  '<div class="stat"><b>$'+(n?(rv/n).toFixed(2):"0.00")+'</b><span>متوسط إيراد الكتاب</span></div></div>'+
+  (tp?'<p style="font-size:14px">الأكثر مبيعًا: <b>'+tp.t+'</b> — '+(tp.s||0)+' نسخة ($'+((tp.s||0)*tp.p).toFixed(2)+')</p>':"")+
+  '<h3 style="font-size:15px;margin:18px 0 4px">نسبة مبيعات كل كتاب</h3>'+
+  BOOKS.map(function(b){var pc=sl?Math.round((b.s||0)/sl*100):0;
+   return '<div class="brow"><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+b.t+'</span>'+
+   '<div class="track"><div class="fill" style="width:'+Math.max(2,(b.s||0)/mx*100)+"%;background:"+LC[b.l]+'"></div></div>'+
+   '<span style="font-size:12px;color:#777">'+pc+'% · '+(b.s||0)+'</span></div>'}).join("");
+}
+function mode(){V=V==="dash"?"shop":"login";sh()}
+function go(){
+ if(document.getElementById("lu").value.trim()===USER&&document.getElementById("lp").value===PASS){V="dash"}
+ else{alert("بيانات خاطئة")}sh();
+}
+function sh(){
+ document.getElementById("shop").style.display=V==="shop"?"":"none";
+ document.getElementById("dash").style.display=V==="dash"?"":"none";
+ document.getElementById("login").style.display=V==="login"?"":"none";
+ document.getElementById("ttl").textContent=V==="dash"?"لوحة المطوّر":"مكتبتي الرقمية";
+ if(V==="shop")shop();if(V==="dash")dash();
+}
+sh();
+</script>
+</body>
+</html>
